@@ -1,4 +1,4 @@
-import { Box, Heading, Button, useToast } from "@chakra-ui/react";
+import { Box, Heading, Button, useToast, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Input } from "@chakra-ui/react";
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
 import { useState } from "react";
 import "leaflet/dist/leaflet.css";
@@ -26,29 +26,39 @@ const randomLocations = [
 const OfficeMap = () => {
   const [pins, setPins] = useState(randomLocations);
   const [addingPin, setAddingPin] = useState(false);
+  const [newPinName, setNewPinName] = useState("");
+  const [newPinLocation, setNewPinLocation] = useState(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
   const AddPinMode = () => {
     useMapEvents({
       click(e) {
         if (addingPin) {
-          const name = prompt("Enter the name for this pin:");
-          if (name) {
-            setPins([...pins, { lat: e.latlng.lat, lng: e.latlng.lng, name }]);
-            toast({
-              title: "Pin added.",
-              description: `Pin "${name}" added to the map.`,
-              status: "success",
-              duration: 3000,
-              isClosable: true,
-            });
-          }
+          setNewPinName("");
+          onOpen();
+          setAddingPin(false);
+          setNewPinLocation(e.latlng);
           setAddingPin(false);
         }
       },
     });
     return null;
   };
+  const handleAddPin = () => {
+    if (newPinName && newPinLocation) {
+      setPins([...pins, { lat: newPinLocation.lat, lng: newPinLocation.lng, name: newPinName }]);
+      toast({
+        title: "Pin added.",
+        description: `Pin "${newPinName}" added to the map.`,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      onClose();
+    }
+  };
+
   return (
     <Box p={4}>
       <Heading mb={4}>Office Locations</Heading>
@@ -65,6 +75,26 @@ const OfficeMap = () => {
         ))}
       {addingPin && <AddPinMode />}
       </MapContainer>
+    <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Add Pin</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Input
+              placeholder="Enter pin name"
+              value={newPinName}
+              onChange={(e) => setNewPinName(e.target.value)}
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={handleAddPin}>
+              Save
+            </Button>
+            <Button variant="ghost" onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };
