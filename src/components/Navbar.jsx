@@ -27,11 +27,6 @@ const Navbar = () => {
               Use Case 3
             </Link>
           </RouterLink>
-          <RouterLink to="/office-map">
-            <Link px={2} py={1} rounded={"md"} _hover={{ textDecoration: "none", bg: useColorModeValue("gray.200", "gray.700") }}>
-              Office Map
-            </Link>
-          </RouterLink>
         </Flex>
       </Flex>
     </Box>
