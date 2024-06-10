@@ -3,6 +3,7 @@ import Index from "./pages/Index.jsx";
 import UseCase1 from "./pages/UseCase1.jsx";
 import UseCase2 from "./pages/UseCase2.jsx";
 import UseCase3 from "./pages/UseCase3.jsx";
+import OfficeMap from "./pages/OfficeMap.jsx";
 import Navbar from "./components/Navbar.jsx";
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Route exact path="/use-case-1" element={<UseCase1 />} />
         <Route exact path="/use-case-2" element={<UseCase2 />} />
         <Route exact path="/use-case-3" element={<UseCase3 />} />
+        <Route exact path="/office-map" element={<OfficeMap />} />
       </Routes>
     </Router>
   );
